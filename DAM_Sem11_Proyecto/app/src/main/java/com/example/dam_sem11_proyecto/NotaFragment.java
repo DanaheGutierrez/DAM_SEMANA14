@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dam_sem11_proyecto.placeholder.PlaceholderContent;
-
 /**
  * A fragment representing a list of Items.
  */
@@ -23,6 +21,9 @@ public class NotaFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private NotasInteractionListener mListener;
+    private List<Nota> notaList;
+    private MyNotaRecyclerViewAdapter adapterNotas;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,8 +65,26 @@ public class NotaFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyNotaRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            notaList = new ArrayList<>();
+            notaList.add(new Nota("UC4","Estudiar para la evaluación de la UC4, 03 de julio de 2024 - Caso: Notas y Listas", true, android.R.color.holo_blue_light));
+            notaList.add(new Nota("Recordar", "Viaje a Tarapoto, acompañado del docente Cotacallapa Moises y Aguilar Igor",false, android.R.color.holo_green_light));
+            notaList.add(new Nota("cumpleaños (fiesta)","celebrar a Jheremy, no olvidar las velas, ", true, android.R.color.holo_orange_light));
+
+            adapterNotas = new MyNotaRecyclerViewAdapter(notaList, mListener);
+            recyclerView.setAdapter(adapterNotas);
+
         }
         return view;
     }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof NotasInteractionListener){
+            mListener = (NotasInteractionListener) context;
+        }else{
+            throw new RuntimeException(context.toString()
+                    + "Debe implementarse NotasInteractionListener");
+        }
+    }
+
 }
